@@ -8,6 +8,9 @@
 
 #import "RITAppDelegate.h"
 
+typedef void(^testBlockType01)(void);
+typedef void(^testBlockType02)(NSString* s01, NSString* s02);
+
 @implementation RITAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -16,8 +19,59 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    
+    // 01.01
+    NSLog(@"01.01");
+    void (^testBlock01)(void);
+    testBlock01 = ^{
+        NSLog(@"testBlock01");
+    };
+    testBlock01();
+    NSLog(@"\n");
+    
+    // 01.02
+    NSLog(@"01.02");
+    void (^testBlock02)(NSString*, NSString*) = ^(NSString* string01, NSString* string02){
+        NSLog(@"testBlock02: string01 = '%@', string02 = '%@'", string01, string02);
+    };
+    testBlock02(@"test01", @"test02");
+    NSLog(@"\n");
+    
+    // 01.03
+    NSLog(@"01.03");
+    testBlockType01 tb01 = ^{
+        NSLog(@"testBlockType01");
+    };
+    tb01();
+    
+    testBlockType02 tb02 = ^(NSString* string01, NSString* string02){
+        NSLog(@"testBlockType02: string01 = '%@', string02 = '%@'", string01, string02);
+    };
+    tb02(@"test01", @"test02");
+    NSLog(@"\n");
+    
+    // 01.04
+    NSLog(@"01.04");
+    [self testBlockMethod:^{
+        NSLog(@"Test 04");
+    }];
+    
     return YES;
 }
+
+- (void) testBlockMethod: (testBlockType01) block {
+    block();
+}
+
+/*
+- (void) testBlockMethod1: (testBlockType02) bl {
+    bl(s01, s02);
+}
+
+- (void) testBlockMethod2: (void(^)(NSString* s01, NSString* s02)) bl {
+    bl(s01, s02);
+}
+*/
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
